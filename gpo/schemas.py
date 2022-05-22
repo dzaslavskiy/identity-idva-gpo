@@ -43,3 +43,9 @@ class Letter(LetterBase):
         """
 
         orm_mode = True
+
+
+class Count(BaseModel):
+    """count of letters"""
+
+    count: int

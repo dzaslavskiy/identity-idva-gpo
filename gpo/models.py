@@ -1,11 +1,14 @@
 """
 Models for GPO
 """
-
 from sqlalchemy import Column, Integer, String
-from .database import Base
+from sqlalchemy.ext.declarative import declarative_base
 
 # pylint: disable=too-few-public-methods
+
+Base = declarative_base()
+
+
 class Letter(Base):
     """
     DB model for Letter
