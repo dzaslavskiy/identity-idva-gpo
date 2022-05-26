@@ -45,7 +45,6 @@ def delete_letters(session: orm.Session, letters: list[models.Letter]):
         session.delete(letter)
 
     session.commit()
-    return
 
 
 def create_letter(session: orm.Session, letter: schemas.LetterCreate) -> models.Letter:

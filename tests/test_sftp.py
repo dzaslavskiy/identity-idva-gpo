@@ -1,5 +1,5 @@
 """ GPO API unit tests """
-from io import StringIO
+import io
 
 from gpo import models, sftp
 
@@ -8,7 +8,7 @@ def test_write_letters(generate_data):
     """
     write letter
     """
-    result = StringIO()
+    result = io.StringIO()
     letter = [generate_data() for _ in range(5)]
 
     sftp.write(result, letter)
@@ -21,7 +21,7 @@ def test_write_letters_with_special_chars():
     |,\n,\r in text are elided
     all others printed verbatim
     """
-    result = StringIO()
+    result = io.StringIO()
     letter = [
         models.Letter(
             id=5,
