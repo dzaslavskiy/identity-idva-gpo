@@ -9,8 +9,7 @@ from zoneinfo import ZoneInfo
 from fastapi import APIRouter, Depends, Response
 from sqlalchemy.orm import Session
 
-from . import crud, schemas, settings, sftp
-from .database import SessionLocal
+from . import crud, schemas, settings, sftp, database
 
 log = logging.getLogger(__name__)
 
@@ -21,7 +20,7 @@ def get_db():
     """
     get db connection
     """
-    db = SessionLocal()
+    db = database.SessionLocal()
     try:
         yield db
     finally:

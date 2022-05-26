@@ -9,12 +9,12 @@ from io import StringIO
 
 import paramiko
 
-from .models import Letter
+from . import models
 
 log = logging.getLogger(__name__)
 
 
-def write(file: StringIO | paramiko.SFTPFile, letters: list[Letter]):
+def write(file: StringIO | paramiko.SFTPFile, letters: list[models.Letter]):
     """
     Write letter data to file
 
@@ -56,7 +56,9 @@ def write(file: StringIO | paramiko.SFTPFile, letters: list[Letter]):
         writer.writerow(sanitized_row)
 
 
-def write_sftp(letters: list[Letter], ssh_settings, file_name: str, dest_dir: str):
+def write_sftp(
+    letters: list[models.Letter], ssh_settings, file_name: str, dest_dir: str
+):
     """
     Write letters to sftp endpoint
     """
