@@ -1,12 +1,12 @@
 """
 REST api models for gpo µservice
 """
-from pydantic import BaseModel
+import pydantic
 
 # pylint: disable=too-few-public-methods
 
 
-class LetterBase(BaseModel):
+class LetterBase(pydantic.BaseModel):
     """
     base letter model
     """
@@ -43,3 +43,9 @@ class Letter(LetterBase):
         """
 
         orm_mode = True
+
+
+class Count(pydantic.BaseModel):
+    """count of letters"""
+
+    count: int

@@ -1,36 +1,53 @@
 """
 CRUD operations for gpo µservice
 """
-from sqlalchemy import select
-from sqlalchemy.orm import Session
+import sqlalchemy
+from sqlalchemy import orm
 
 from . import models, schemas
 
 
+def count_letters(session: orm.Session) -> int:
+    """
+    count letters
+    """
+    return session.scalar(sqlalchemy.select(sqlalchemy.func.count(models.Letter.id)))
+
+
 def get_letters(
-    session: Session, skip: int = 0, limit: int = 1000
+    session: orm.Session, skip: int = 0, limit: int = 1000
 ) -> list[models.Letter]:
     """
     get letters
     """
-    return (
-        session.execute(select(models.Letter).offset(skip).limit(limit)).scalars().all()
-    )
+    statement = sqlalchemy.select(models.Letter).offset(skip).limit(limit)
+    return session.execute(statement).scalars().all()
 
 
-def delete_letters(session: Session, letters: list[models.Letter]):
+def get_letters_for_update(
+    session: orm.Session, skip: int = 0, limit: int = 1000
+) -> list[models.Letter]:
     """
-    delete letters by id
+    get letters with lock
+    """
+    statement = (
+        sqlalchemy.select(models.Letter).with_for_update().offset(skip).limit(limit)
+    )
+    return session.execute(statement).scalars().all()
+
+
+def delete_letters(session: orm.Session, letters: list[models.Letter]):
+    """
+    delete list of letters by instance
     """
 
     for letter in letters:
         session.delete(letter)
 
     session.commit()
-    return
 
 
-def create_letter(session: Session, letter: schemas.LetterCreate) -> models.Letter:
+def create_letter(session: orm.Session, letter: schemas.LetterCreate) -> models.Letter:
     """
     create letter
     """

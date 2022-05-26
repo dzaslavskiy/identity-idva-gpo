@@ -1,22 +1,18 @@
 """
 Db Connection for GPO
 """
-from sqlalchemy import create_engine
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker
-from sqlalchemy.schema import CreateSchema
-from gpo import settings
+import sqlalchemy
+from sqlalchemy import orm, schema
 
-# Sqlalchemy requires 'postgresql' as the protocol
-uri = settings.DB_URI.replace("postgres://", "postgresql://", 1)
+from . import settings
 
-schema_name = "gpo"
+engine = sqlalchemy.create_engine(
+    settings.DB_URI, connect_args={"options": f"-csearch_path={settings.SCHEMA_NAME}"}
+)
 
-engine = create_engine(uri, connect_args={"options": f"-csearch_path={schema_name}"})
+if not engine.dialect.has_schema(engine, settings.SCHEMA_NAME):
+    engine.execute(schema.CreateSchema(settings.SCHEMA_NAME))
 
-if not engine.dialect.has_schema(engine, schema_name):
-    engine.execute(CreateSchema(schema_name))
-
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine, future=True)
-
-Base = declarative_base()
+SessionLocal = orm.sessionmaker(
+    autocommit=False, autoflush=False, bind=engine, future=True
+)
