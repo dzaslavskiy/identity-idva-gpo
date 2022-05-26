@@ -7,8 +7,7 @@ import io
 import zoneinfo
 
 import fastapi
-import fastapi
-from sqlalchemy.orm import Session
+from sqlalchemy import orm
 
 from . import crud, schemas, settings, sftp, database
 
@@ -29,7 +28,7 @@ def get_db():
 
 
 @router.post("/upload", response_model=schemas.Count)
-def upload_batch(session: Session = fastapi.Depends(get_db)):
+def upload_batch(session: orm.Session = fastapi.Depends(get_db)):
     """
     Upload letter data file to GPO server.
     """
@@ -64,7 +63,7 @@ def upload_batch(session: Session = fastapi.Depends(get_db)):
 
 @router.post("/letters", response_model=schemas.Letter)
 def queue_letter(
-    letter: schemas.LetterCreate, session: Session = fastapi.Depends(get_db)
+    letter: schemas.LetterCreate, session: orm.Session = fastapi.Depends(get_db)
 ):
     """
     Add a letter to the queue
@@ -73,7 +72,7 @@ def queue_letter(
 
 
 @router.get("/letters", response_model=schemas.Count)
-def count_letter(session: Session = fastapi.Depends(get_db)):
+def count_letter(session: orm.Session = fastapi.Depends(get_db)):
     """
     Get count of letter in the queue
     """
