@@ -3,17 +3,18 @@ gpo rest api
 """
 import logging
 from datetime import datetime
-from io import StringIO
-from zoneinfo import ZoneInfo
+import io
+import zoneinfo
 
-from fastapi import APIRouter, Depends, Response
+import fastapi
+import fastapi
 from sqlalchemy.orm import Session
 
 from . import crud, schemas, settings, sftp, database
 
 log = logging.getLogger(__name__)
 
-router = APIRouter()
+router = fastapi.APIRouter()
 
 
 def get_db():
@@ -28,7 +29,7 @@ def get_db():
 
 
 @router.post("/upload", response_model=schemas.Count)
-def upload_batch(session: Session = Depends(get_db)):
+def upload_batch(session: Session = fastapi.Depends(get_db)):
     """
     Upload letter data file to GPO server.
     """
@@ -41,19 +42,19 @@ def upload_batch(session: Session = Depends(get_db)):
         return {"count": count}
 
     if settings.DEBUG:
-        output = StringIO()
+        output = io.StringIO()
         sftp.write(output, letters)
         log.debug(output.getvalue())
         crud.delete_letters(session, letters)
         return {"count": count}
 
-    date = datetime.now(ZoneInfo("US/Eastern")).strftime("%Y%m%d")
+    date = datetime.now(zoneinfo.ZoneInfo("US/Eastern")).strftime("%Y%m%d")
     file_name = f"idva-{date}-0.psv"
 
     try:
         sftp.write_sftp(letters, settings, file_name, settings.DEST_FILE_DIR)
     except sftp.SftpError:
-        return Response(status_code=400)
+        return fastapi.Response(status_code=400)
 
     crud.delete_letters(session, letters)
     log.info("Uploaded %i letter(s) as %s", count, file_name)
@@ -62,7 +63,9 @@ def upload_batch(session: Session = Depends(get_db)):
 
 
 @router.post("/letters", response_model=schemas.Letter)
-def queue_letter(letter: schemas.LetterCreate, session: Session = Depends(get_db)):
+def queue_letter(
+    letter: schemas.LetterCreate, session: Session = fastapi.Depends(get_db)
+):
     """
     Add a letter to the queue
     """
@@ -70,7 +73,7 @@ def queue_letter(letter: schemas.LetterCreate, session: Session = Depends(get_db
 
 
 @router.get("/letters", response_model=schemas.Count)
-def count_letter(session: Session = Depends(get_db)):
+def count_letter(session: Session = fastapi.Depends(get_db)):
     """
     Get count of letter in the queue
     """

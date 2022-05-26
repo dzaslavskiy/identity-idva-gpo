@@ -3,7 +3,6 @@ Configuration for the GPO microservice settings.
 Context is switched based on if the app is in debug mode.
 """
 import json
-from json import JSONDecodeError
 import logging
 import os
 
@@ -26,7 +25,7 @@ def get_db_uri():
     vcap_services = os.getenv("VCAP_SERVICES", "")
     try:
         db_uri = json.loads(vcap_services)["aws-rds"][0]["credentials"]["uri"]
-    except (JSONDecodeError, KeyError) as err:
+    except (json.JSONDecodeError, KeyError) as err:
         log.warning("Unable to load db_uri from VCAP_SERVICES")
         log.debug("Error: %s", str(err))
         db_uri = ""

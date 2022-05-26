@@ -1,12 +1,12 @@
 """
 Models for GPO
 """
-from sqlalchemy import Column, Integer, String
-from sqlalchemy.ext.declarative import declarative_base
+import sqlalchemy as sqla
+from sqlalchemy.ext import declarative
 
 # pylint: disable=too-few-public-methods
 
-Base = declarative_base()
+Base = declarative.declarative_base()
 
 
 class Letter(Base):
@@ -16,18 +16,18 @@ class Letter(Base):
 
     __tablename__ = "letters"
 
-    id = Column(Integer, primary_key=True, index=True)
-    name = Column(String)
-    address = Column(String)
-    address2 = Column(String)
-    city = Column(String)
-    state = Column(String)
-    zip = Column(String)
-    code = Column(String)
-    date = Column(String)
-    expiry = Column(String)
-    app = Column(String)
-    url = Column(String)
+    id = sqla.Column(sqla.Integer, primary_key=True, index=True)
+    name = sqla.Column(sqla.String)
+    address = sqla.Column(sqla.String)
+    address2 = sqla.Column(sqla.String)
+    city = sqla.Column(sqla.String)
+    state = sqla.Column(sqla.String)
+    zip = sqla.Column(sqla.String)
+    code = sqla.Column(sqla.String)
+    date = sqla.Column(sqla.String)
+    expiry = sqla.Column(sqla.String)
+    app = sqla.Column(sqla.String)
+    url = sqla.Column(sqla.String)
 
     def as_list(self, index: str) -> list:
         """

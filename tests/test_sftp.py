@@ -1,8 +1,7 @@
 """ GPO API unit tests """
 from io import StringIO
 
-from gpo.models import Letter
-from gpo.sftp import write
+from gpo import models, sftp
 
 
 def test_write_letters(generate_data):
@@ -12,7 +11,7 @@ def test_write_letters(generate_data):
     result = StringIO()
     letter = [generate_data() for _ in range(5)]
 
-    write(result, letter)
+    sftp.write(result, letter)
     print(result.getvalue())
     assert True
 
@@ -24,7 +23,7 @@ def test_write_letters_with_special_chars():
     """
     result = StringIO()
     letter = [
-        Letter(
+        models.Letter(
             id=5,
             name="Name|",
             address="Addr\ness",
@@ -40,7 +39,7 @@ def test_write_letters_with_special_chars():
         )
     ]
 
-    write(result, letter)
+    sftp.write(result, letter)
     expected = """01|1
 02|Name|Address|Ad"dress 2|City|Stat\te|'Zip|Code|Date|Date|App|Url
 """

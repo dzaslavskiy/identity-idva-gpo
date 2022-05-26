@@ -4,8 +4,8 @@ sftp letter writer service
 import csv
 import logging
 import math
-from base64 import b64decode
-from io import StringIO
+import base64
+import io
 
 import paramiko
 
@@ -14,7 +14,7 @@ from . import models
 log = logging.getLogger(__name__)
 
 
-def write(file: StringIO | paramiko.SFTPFile, letters: list[models.Letter]):
+def write(file: io.StringIO | paramiko.SFTPFile, letters: list[models.Letter]):
     """
     Write letter data to file
 
@@ -63,7 +63,7 @@ def write_sftp(
     Write letters to sftp endpoint
     """
     with paramiko.SSHClient() as ssh_client:
-        host_key = paramiko.RSAKey(data=b64decode(ssh_settings.GPO_HOSTKEY))
+        host_key = paramiko.RSAKey(data=base64.b64decode(ssh_settings.GPO_HOSTKEY))
         ssh_client.get_host_keys().add(ssh_settings.GPO_HOST, "ssh-rsa", host_key)
         ssh_client.connect(
             ssh_settings.GPO_HOST,

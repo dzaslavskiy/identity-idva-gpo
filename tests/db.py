@@ -1,11 +1,12 @@
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
-from sqlalchemy.pool import StaticPool
+import sqlalchemy
+from sqlalchemy import orm, pool
 
-engine = create_engine(
+engine = sqlalchemy.create_engine(
     "sqlite:///:memory:",
     connect_args={"check_same_thread": False},
-    poolclass=StaticPool,
+    poolclass=pool.StaticPool,
 )
 
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine, future=True)
+SessionLocal = orm.sessionmaker(
+    autocommit=False, autoflush=False, bind=engine, future=True
+)

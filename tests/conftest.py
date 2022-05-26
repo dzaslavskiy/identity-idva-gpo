@@ -1,9 +1,9 @@
 """fixtures"""
 import sys
-from typing import Generator
+import typing
 
 import pytest
-from fastapi.testclient import TestClient
+from fastapi import testclient
 
 import db
 from db import SessionLocal
@@ -39,13 +39,13 @@ def generate_data():
 
 
 @pytest.fixture(scope="session")
-def session() -> Generator:
+def session() -> typing.Generator:
     """session"""
     yield SessionLocal()
 
 
 @pytest.fixture(scope="module")
-def client() -> Generator:
+def client() -> typing.Generator:
     """api test client"""
-    with TestClient(app) as test_client:
+    with testclient.TestClient(app) as test_client:
         yield test_client

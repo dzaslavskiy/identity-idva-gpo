@@ -1,8 +1,8 @@
 """GPO api tests"""
-from fastapi.testclient import TestClient
+from fastapi import testclient
 
 
-def test_count_letter(client: TestClient) -> None:
+def test_count_letter(client: testclient.TestClient) -> None:
     """test letter count"""
     response = client.get("/letters")
     assert response.status_code == 200
@@ -10,7 +10,7 @@ def test_count_letter(client: TestClient) -> None:
     assert isinstance(content["count"], int)
 
 
-def test_create_letter(client: TestClient) -> None:
+def test_create_letter(client: testclient.TestClient) -> None:
     """ "create letter"""
     letter = {
         "name": "FAKEY MCFAKERSON",
